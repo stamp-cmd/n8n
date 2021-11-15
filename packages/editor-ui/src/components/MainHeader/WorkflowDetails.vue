@@ -63,7 +63,7 @@
 			<template>
 				<span class="activator">
 					<span>Active:</span>
-					<WorkflowActivator :workflow-active="isWorkflowActive" :workflow-id="currentWorkflowId" :disabled="!currentWorkflowId"/>
+					<WorkflowActivator :workflow-active="isWorkflowActive" :workflow-id="currentWorkflowId"/>
 				</span>
 				<SaveButton
 					:saved="!this.isDirty && !this.isNewWorkflow"
