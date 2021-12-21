@@ -48,6 +48,14 @@ export class Jenkins implements INodeType {
 				name: 'JenkinsApi',
 				required: true,
 				testedBy: 'buildsGetApiTest',
+				displayOptions: {
+					hide: {
+						operation: [
+							'trigger',
+							'triggerParams',
+						],
+					},
+				},
 			},
 		],
 		properties: [
@@ -326,7 +334,7 @@ export class Jenkins implements INodeType {
 				},
 				options: [
 					{
-						name: 'Get All Builds',
+						name: 'Get All',
 						value: 'build:getAll',
 						description: 'List Builds',
 					},
@@ -334,24 +342,6 @@ export class Jenkins implements INodeType {
 				default: 'build:getAll',
 				description: 'Build operation',
 				noDataExpression: true,
-			},
-			{
-				displayName: 'Depth',
-				name: 'depth',
-				type: 'number',
-				displayOptions: {
-					show: {
-						resource: [
-							'build',
-						],
-						operation: [
-							'build:getAll',
-						],
-					},
-				},
-				required: true,
-				default: 1,
-				description: '',
 			},
 			{
 				displayName: 'Filters',
@@ -370,6 +360,13 @@ export class Jenkins implements INodeType {
 					},
 				},
 				options: [
+					{
+						displayName: 'Depth',
+						name: 'depth',
+						type: 'number',
+						default: 1,
+						description: 'Number depth parameter',
+					},
 					{
 						displayName: 'Tree',
 						name: 'tree',
@@ -532,16 +529,16 @@ export class Jenkins implements INodeType {
 				if (resource === 'build') {
 					if (operation === 'build:getAll') {
 						const endpoint = `${baseUrl}/api/xml`;
-						const depth = this.getNodeParameter('depth', i) as number;
-
 						const filters = this.getNodeParameter('filters', i) as IDataObject;
 
 						const tree = filters.tree as string ;
 						const xpath = filters.xpath as string;
 						const exclude = filters.exclude as string;
+						const depth = filters.depth as number;
+
 
 						const queryParams = {
-							depth,
+							depth: depth ? depth : 1,
 							tree,
 							xpath,
 							exclude,
